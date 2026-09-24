@@ -15,4 +15,22 @@ the request goes through the following stages before the page appears on screen:
    resolves to the IP address(es) of GitHub Pages' hosting infrastructure.
 3. **TCP connection.** The browser opens a TCP connection to that IP address on port 443,
    completing the three-way handshake (SYN → SYN-ACK → ACK).
+4. **TLS handshake.** Because the site is served over HTTPS, the browser and server perform a
+   TLS handshake: they agree on a cipher suite, the server presents its SSL certificate (GitHub
+   Pages provisions this automatically), and a secure, encrypted channel is established.
+5. **HTTP request.** The browser sends an HTTP `GET /` request over that encrypted connection,
+   including headers like `Host: batahualpa11.github.io`, `User-Agent`, and `Accept`.
+6. **Server processing.** Fastly's edge servers (GitHub Pages' CDN) receive the request. Since
+   GitHub Pages serves static files, there's no backend application logic the edge server maps
+   the request path to a file in the repository's published branch and looks for `index.html`
+   in the root, exactly as described in the lab guide.
+7. **HTTP response.** The server sends back an HTTP response: a status line (`HTTP/1.1 200 OK`
+   if found, `404 Not Found` if `index.html` is missing or the path is wrong), response headers
+   (`Content-Type: text/html`, caching headers, etc.), and the body the raw HTML of the page.
+8. **Additional requests.** As the browser parses the HTML, it discovers more resources to fetch
+   — `style.css`, the image in `/assets`, and any fonts and issues additional HTTP requests for
+   each one, reusing the existing TCP/TLS connection where possible (HTTP keep-alive).
+9. **Rendering.** The browser builds the DOM from the HTML, the CSSOM from the CSS, combines them
+   into a render tree, computes layout, and paints pixels to the screen. Once all critical
+   resources have loaded, the fully styled resume page is visible to the user.
 
