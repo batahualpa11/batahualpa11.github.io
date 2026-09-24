@@ -56,10 +56,19 @@ img {
   border: 0;
 }
 
+/* Specificity conflict: both rules target the <p class="tagline">
+   contact line. ".tagline" (class, specificity 0,1,0) beats "p"
+   (element, specificity 0,0,1) regardless of source order, so the
+   tagline stays centered/small instead of using the plain p style. */
 .tagline {
   text-align: center;
   font-size: 0.95em;
   margin: 0 0 8px;
+}
+
+p {
+  text-align: left;
+  font-size: 1em;
 }
 
 #site-header {
