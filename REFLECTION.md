@@ -12,5 +12,7 @@ the request goes through the following stages before the page appears on screen:
 2. **DNS resolution.** The browser needs an IP address for `batahualpa11.github.io`. It checks
    its local cache, then the OS resolver, then (if needed) queries a recursive DNS server, which
    walks the domain hierarchy (root → `.io` TLD → GitHub's authoritative name servers) until it
-   resolves to the IP address(es) of GitHub Pages' hosting infrastructure (backed by Fastly, the
-   CDN GitHub Pages uses).
+   resolves to the IP address(es) of GitHub Pages' hosting infrastructure.
+3. **TCP connection.** The browser opens a TCP connection to that IP address on port 443,
+   completing the three-way handshake (SYN → SYN-ACK → ACK).
+
